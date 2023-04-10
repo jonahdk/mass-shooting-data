@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>Comparison between mass shootings this year and days so far</title>
+  </head>
+  <body>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    Number of mass shootings in 2023 in the US alone:
+
+    <span id="how-many-shootings" class="the-big-number"> ...? </span> 
+<br>Day
+<span id="DOY"class="the-big-number"></span>
+of the year
+<br>
+This is especially terrible because since there is more shootings than days, thats an average of more than 1 shooting PER DAY! At the time of writing this, it is day 100 and 172 shootings, making an average of 1.72 per day.
+    <script>
+      
+      var jsonURL='https://mass-shooting-tracker-data.s3.us-east-2.amazonaws.com/2023-data.json'
+      
+      $(document).ready(function() {
+        $.getJSON(
+          "https://mass-shooting-tracker-data.s3.us-east-2.amazonaws.com/2023-data.json",
+          function(jsonURL) {
+            $("#how-many-shootings").html( jsonURL.length );
+          });
+        });
+    </script>
+
+<script>
+Date.prototype.getDOY = function() {
+  var onejan = new Date(this.getFullYear(),0,1);
+  return Math.ceil((this - onejan) / 86400000);
+}
+var today = new Date();
+var daynum = today.getDOY();
+  $("#DOY").html(daynum)
+</script>
+<!-- Credit for the shooting data goes to masssootingtracker.site -->
+  </body>
+</html>
