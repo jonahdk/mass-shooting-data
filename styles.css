@@ -1,0 +1,8 @@
+body{
+  font: 12pt Arial;
+}
+span.the-big-number {
+  font-size: 24pt;
+  font-weight: bold;
+  color: red;
+}
