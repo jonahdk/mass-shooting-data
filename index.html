@@ -1,42 +1,45 @@
 <!DOCTYPE HTML>
 <html>
-  <head>
-    <link rel="stylesheet" href="styles.css">
-    <title>Comparison between mass shootings this year and days so far</title>
-  </head>
-  <body>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    Number of mass shootings in 2023 in the US alone:
+<head>
+	<link rel="stylesheet" href="styles.css">
+	<title>Comparison between mass shootings this year and days so far</title>
+</head>
 
-    <span id="how-many-shootings" class="the-big-number"> You must enable JavaScript in your browser for this site to function </span> 
-<br>Day
-<span id="DOY"class="the-big-number"></span>
-of the year
-<br>
-This is especially terrible because since there are more shootings than days, that's an average of more than 1 shooting PER DAY!
-    <script>
-      
-      var jsonURL='https://mass-shooting-tracker-data.s3.us-east-2.amazonaws.com/2024-data.json'
-      
-      $(document).ready(function() {
-        $.getJSON(
-          "https://mass-shooting-tracker-data.s3.us-east-2.amazonaws.com/2024-data.json",
-          function(jsonURL) {
-            $("#how-many-shootings").html( jsonURL.length );
-          });
-        });
-    </script>
+<body>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script>
-Date.prototype.getDOY = function() {
-  var onejan = new Date(this.getFullYear(),0,1);
-  return Math.ceil((this - onejan) / 86400000);
-}
-var today = new Date();
-var daynum = today.getDOY();
-  $("#DOY").html(daynum)
-</script>
-<!-- Credit for the shooting data goes to massshootingtracker.site -->
-  </body>
+	Number of mass shootings in 2024 in the US alone:
+
+	<span id="how-many-shootings" class="the-big-number"> ...? </span>
+	<br>Day
+	<span id="DOY" class="the-big-number"></span>
+	of the year
+	<br>
+	This is especially terrible because since there are more shootings than days, that's an average of
+	<span id="average-shootings-per-day" class="the-big-number">You must enable JavaScript in your browser for this site to function</span>
+	shootings PER DAY!
+	<script type="module">
+		Date.prototype.getDOY = function() {
+			var onejan = new Date(this.getFullYear(), 0, 1);
+			return Math.ceil((this - onejan) / 86400000);
+		}
+		let today = new Date();
+		let daynum = today.getDOY();
+		let x = await getShootingsCount();
+		$("#how-many-shootings").html(x);
+		let y = daynum;
+		$("#DOY").html(daynum);
+		let z = x / y;
+		$("#average-shootings-per-day").html(z.toPrecision(3));
+		async function getShootingsCount() {
+			var jsonURL = 'https://mass-shooting-tracker-data.s3.us-east-2.amazonaws.com/2024-data.json';
+			const response = await fetch(jsonURL);
+			const shootings = await response.json();
+			return shootings.length;
+		}
+	</script>
+	<!-- Credit for the shooting data goes to masssootingtracker.site -->
+</body>
+
 </html>
