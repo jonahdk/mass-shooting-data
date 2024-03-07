@@ -14,14 +14,14 @@
 <span id="DOY"class="the-big-number"></span>
 of the year
 <br>
-This is especially terrible because since there is more shootings than days, thats an average of more than 1 shooting PER DAY!
+This is especially terrible because since there are more shootings than days, that's an average of more than 1 shooting PER DAY!
     <script>
       
-      var jsonURL='https://mass-shooting-tracker-data.s3.us-east-2.amazonaws.com/2023-data.json'
+      var jsonURL='https://mass-shooting-tracker-data.s3.us-east-2.amazonaws.com/2024-data.json'
       
       $(document).ready(function() {
         $.getJSON(
-          "https://mass-shooting-tracker-data.s3.us-east-2.amazonaws.com/2023-data.json",
+          "https://mass-shooting-tracker-data.s3.us-east-2.amazonaws.com/2024-data.json",
           function(jsonURL) {
             $("#how-many-shootings").html( jsonURL.length );
           });
