@@ -3,22 +3,22 @@
 
 <head>
 	<link rel="stylesheet" href="styles.css">
-	<title>Comparison between mass shootings this year and days so far</title>
+	<title>Annual mass shooting data</title>
 </head>
 
 <body>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-	Number of mass shootings in 2024 in the US alone:
+	Number of mass shootings in 2025 in the US alone:
 
 	<span id="how-many-shootings" class="the-big-number"> ...? </span>
 	<br>Day
 	<span id="DOY" class="the-big-number"></span>
 	of the year
 	<br>
-	This is especially terrible because since there are more shootings than days, that's an average of
+	That's an average of
 	<span id="average-shootings-per-day" class="the-big-number">You must enable JavaScript in your browser for this site to function</span>
-	shootings PER DAY!
+	shootings per day!
 	<script type="module">
 		Date.prototype.getDOY = function() {
 			var onejan = new Date(this.getFullYear(), 0, 1);
@@ -33,13 +33,13 @@
 		let z = x / y;
 		$("#average-shootings-per-day").html(z.toPrecision(3));
 		async function getShootingsCount() {
-			var jsonURL = 'https://mass-shooting-tracker-data.s3.us-east-2.amazonaws.com/2024-data.json';
+			var jsonURL = 'https://mass-shooting-tracker-data.s3.us-east-2.amazonaws.com/2025-data.json';
 			const response = await fetch(jsonURL);
 			const shootings = await response.json();
 			return shootings.length;
 		}
 	</script>
-	<!-- Credit for the shooting data goes to masssootingtracker.site -->
+	<!-- Credit for the shooting data goes to massshootingtracker.site -->
 </body>
 
 </html>
