@@ -9,7 +9,7 @@
 <body>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-	Number of mass shootings in 2025 in the US alone:
+       Number of mass shootings in <span id="current-year"></span> in the US alone:
 
 	<span id="how-many-shootings" class="the-big-number"> ...? </span>
 	<br>Day
@@ -24,17 +24,19 @@
 			var onejan = new Date(this.getFullYear(), 0, 1);
 			return Math.ceil((this - onejan) / 86400000);
 		}
-		let today = new Date();
-		let daynum = today.getDOY();
-		let x = await getShootingsCount();
-		$("#how-many-shootings").html(x);
-		let y = daynum;
-		$("#DOY").html(daynum);
+               let today = new Date();
+               let year = today.getFullYear();
+               let daynum = today.getDOY();
+               let x = await getShootingsCount();
+               $("#how-many-shootings").html(x);
+               $("#current-year").html(year);
+               let y = daynum;
+               $("#DOY").html(daynum);
 		let z = x / y;
 		$("#average-shootings-per-day").html(z.toPrecision(3));
-		async function getShootingsCount() {
-			var jsonURL = 'https://mass-shooting-tracker-data.s3.us-east-2.amazonaws.com/2025-data.json';
-			const response = await fetch(jsonURL);
+               async function getShootingsCount() {
+                       var jsonURL = `https://mass-shooting-tracker-data.s3.us-east-2.amazonaws.com/${year}-data.json`;
+                       const response = await fetch(jsonURL);
 			const shootings = await response.json();
 			return shootings.length;
 		}
