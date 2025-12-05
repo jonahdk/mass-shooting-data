@@ -1,47 +1,99 @@
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
-	<link rel="stylesheet" href="styles.css">
-	<title>Annual mass shooting data</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Annual Mass Shooting Data</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <div class="page-shell">
+    <header class="hero">
+      <p class="eyebrow">Real-time snapshot</p>
+      <h1>U.S. mass shootings in <span id="current-year">—</span></h1>
+      <p class="lede">Live totals compiled from massshootingtracker.site and refreshed when you load this page.</p>
+    </header>
 
-       Number of mass shootings in <span id="current-year"></span> in the US alone:
+    <main class="stats-card" aria-live="polite">
+      <div class="stat">
+        <p class="label">Total incidents this year</p>
+        <p id="how-many-shootings" class="value">Loading…</p>
+      </div>
+      <div class="stat">
+        <p class="label">Day of the year</p>
+        <p id="DOY" class="value">—</p>
+      </div>
+      <div class="stat">
+        <p class="label">Average per day</p>
+        <p id="average-shootings-per-day" class="value">—</p>
+      </div>
+      <p id="meta" class="meta">Calculating…</p>
+    </main>
 
-	<span id="how-many-shootings" class="the-big-number"> ...? </span>
-	<br>Day
-	<span id="DOY" class="the-big-number"></span>
-	of the year
-	<br>
-	That's an average of
-	<span id="average-shootings-per-day" class="the-big-number">You must enable JavaScript in your browser for this site to function</span>
-	shootings per day!
-	<script type="module">
-		Date.prototype.getDOY = function() {
-			var onejan = new Date(this.getFullYear(), 0, 1);
-			return Math.ceil((this - onejan) / 86400000);
-		}
-               let today = new Date();
-               let year = today.getFullYear();
-               let daynum = today.getDOY();
-               let x = await getShootingsCount();
-               $("#how-many-shootings").html(x);
-               $("#current-year").html(year);
-               let y = daynum;
-               $("#DOY").html(daynum);
-		let z = x / y;
-		$("#average-shootings-per-day").html(z.toPrecision(3));
-               async function getShootingsCount() {
-                       var jsonURL = `https://mass-shooting-tracker-data.s3.us-east-2.amazonaws.com/${year}-data.json`;
-                       const response = await fetch(jsonURL);
-			const shootings = await response.json();
-			return shootings.length;
-		}
-	</script>
-	<!-- Credit for the shooting data goes to massshootingtracker.site -->
+    <footer class="footnotes">
+      <p>Data source: <a href="https://massshootingtracker.site/" target="_blank" rel="noopener">massshootingtracker.site</a></p>
+      <p class="credit">Built to surface the scale of gun violence in near real time.</p>
+      <noscript>Please enable JavaScript to load the latest counts.</noscript>
+    </footer>
+  </div>
+
+  <script type="module">
+    const currentYearEl = document.getElementById('current-year');
+    const totalEl = document.getElementById('how-many-shootings');
+    const doyEl = document.getElementById('DOY');
+    const avgEl = document.getElementById('average-shootings-per-day');
+    const metaEl = document.getElementById('meta');
+
+    const today = new Date();
+    const year = today.getFullYear();
+    currentYearEl.textContent = year;
+
+    const dayOfYear = (() => {
+      const start = new Date(year, 0, 0);
+      const diff = today - start;
+      return Math.floor(diff / 86400000);
+    })();
+    doyEl.textContent = dayOfYear.toString();
+
+    const numberFormatter = new Intl.NumberFormat('en-US');
+    const metaTimeFormatter = new Intl.DateTimeFormat('en-US', {
+      dateStyle: 'medium',
+      timeStyle: 'short'
+    });
+
+    async function fetchShootings() {
+      const url = `https://mass-shooting-tracker-data.s3.us-east-2.amazonaws.com/${year}-data.json`;
+      try {
+        const response = await fetch(url, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const shootings = await response.json();
+        return shootings.length;
+      } catch (err) {
+        console.error('Failed to load shooting data', err);
+        throw err;
+      }
+    }
+
+    (async () => {
+      try {
+        const count = await fetchShootings();
+        totalEl.textContent = numberFormatter.format(count);
+        const avg = count / dayOfYear;
+        avgEl.textContent = isFinite(avg) ? avg.toPrecision(3) : '—';
+        metaEl.textContent = `Updated ${metaTimeFormatter.format(new Date())}`;
+      } catch (error) {
+        totalEl.textContent = 'Unavailable';
+        avgEl.textContent = 'Unavailable';
+        metaEl.textContent = 'Could not load data. Please refresh to try again.';
+      }
+    })();
+  </script>
+  <!-- Credit for the shooting data goes to massshootingtracker.site -->
 </body>
 
 </html>
