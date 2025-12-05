@@ -8,7 +8,131 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root {
+	--bg: #0f172a;
+	--bg-secondary: #0b1224;
+	--card: rgba(255, 255, 255, 0.08);
+	--border: rgba(255, 255, 255, 0.16);
+	--text: #e7eefc;
+	--muted: #b8c2d8;
+	--accent: #ff914d;
+	--shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+	--max-width: 960px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+	margin: 0;
+	min-height: 100vh;
+	font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+	color: var(--text);
+	background: radial-gradient(circle at 20% 20%, #1e293b 0, transparent 35%),
+		radial-gradient(circle at 80% 0%, #132c4a 0, transparent 30%),
+		linear-gradient(135deg, var(--bg-secondary), var(--bg));
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 48px 24px;
+}
+
+.page-shell {
+	width: min(100%, var(--max-width));
+	display: grid;
+	gap: 20px;
+}
+
+.hero { text-align: center; }
+
+.eyebrow {
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	font-weight: 700;
+	color: var(--accent);
+	margin: 0 0 8px;
+}
+
+h1 {
+	margin: 0;
+	font-size: clamp(32px, 4vw, 46px);
+	line-height: 1.1;
+}
+
+.lede {
+	margin: 10px auto 0;
+	max-width: 46ch;
+	color: var(--muted);
+}
+
+.stats-card {
+	background: var(--card);
+	border: 1px solid var(--border);
+	border-radius: 20px;
+	backdrop-filter: blur(10px);
+	padding: 28px;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+	gap: 18px;
+	box-shadow: var(--shadow);
+}
+
+.stat {
+	padding: 14px 12px;
+	border-radius: 14px;
+	background: rgba(255, 255, 255, 0.02);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.label {
+	margin: 0 0 6px;
+	color: var(--muted);
+	font-weight: 600;
+	letter-spacing: 0.01em;
+}
+
+.value {
+	margin: 0;
+	font-size: clamp(32px, 5vw, 56px);
+	font-weight: 700;
+	color: var(--accent);
+	line-height: 1;
+}
+
+.meta {
+	grid-column: 1 / -1;
+	margin: 6px 0 0;
+	color: var(--muted);
+	text-align: right;
+}
+
+.footnotes {
+	text-align: center;
+	color: var(--muted);
+	font-size: 0.95rem;
+	line-height: 1.5;
+}
+
+.footnotes a {
+	color: var(--text);
+	font-weight: 600;
+	text-decoration: none;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.footnotes a:hover {
+	color: var(--accent);
+	border-bottom-color: var(--accent);
+}
+
+.credit { margin: 6px 0 0; }
+
+@media (max-width: 640px) {
+	body { padding: 32px 18px; }
+	.stats-card { padding: 22px; }
+	.meta { text-align: left; }
+}
+  </style>
 </head>
 
 <body>
