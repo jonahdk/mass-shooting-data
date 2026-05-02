@@ -127,6 +127,72 @@ h1 {
 
 .credit { margin: 6px 0 0; }
 
+.info-trigger {
+	margin-top: 10px;
+	background: transparent;
+	color: var(--text);
+	border: 1px solid var(--border);
+	border-radius: 999px;
+	padding: 8px 14px;
+	font: inherit;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.info-trigger:hover,
+.info-trigger:focus-visible {
+	border-color: var(--accent);
+	color: var(--accent);
+}
+
+.info-trigger:focus-visible,
+.info-actions button:focus-visible {
+	outline: 3px solid -webkit-focus-ring-color;
+	outline: 3px solid var(--accent);
+	outline-offset: 3px;
+	box-shadow: 0 0 0 4px rgba(255, 145, 77, 0.3);
+}
+
+dialog.info-dialog {
+	width: min(720px, calc(100% - 24px));
+	border: 1px solid var(--border);
+	border-radius: 16px;
+	padding: 0;
+	color: var(--text);
+	background: #101a31;
+	box-shadow: var(--shadow);
+}
+
+.info-dialog::backdrop { background: rgba(3, 8, 20, 0.75); }
+
+.info-dialog-content { padding: 22px; }
+
+.info-dialog h2 { margin: 0 0 8px; }
+
+.info-dialog ul {
+	margin: 10px 0 0;
+	padding-left: 20px;
+	color: var(--muted);
+	line-height: 1.5;
+}
+
+.info-actions {
+	margin-top: 16px;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.info-actions button {
+	background: var(--accent);
+	color: #1f1209;
+	border: 0;
+	border-radius: 10px;
+	padding: 8px 12px;
+	font: inherit;
+	font-weight: 700;
+	cursor: pointer;
+}
+
 @media (max-width: 640px) {
 	body { padding: 32px 18px; }
 	.stats-card { padding: 22px; }
@@ -161,10 +227,28 @@ h1 {
 
     <footer class="footnotes">
       <p>Data source: <a href="https://massshootingtracker.site/" target="_blank" rel="noopener">massshootingtracker.site</a></p>
+      <button id="additional-info-trigger" class="info-trigger" type="button">Additional info</button>
       <p class="credit">Built to surface the scale of gun violence in near real time.</p>
       <noscript>Please enable JavaScript to load the latest counts.</noscript>
     </footer>
   </div>
+
+  <dialog id="additional-info-dialog" class="info-dialog" aria-labelledby="additional-info-title">
+    <div class="info-dialog-content">
+      <h2 id="additional-info-title">How this source defines “mass shooting”</h2>
+      <ul>
+        <li>This dataset tracks incidents where <strong>4 or more people are shot</strong> in one event.</li>
+		<li>This is as opposed to the FBI's definition of mass murder: 3 or more people murdered in one event.</li>
+		<li>For example: in 2012, Travis Steed and others shot 18 people total, miraculously only killing one. As the source notes, under the FBI and mainstream media definition, this would not be considered a mass shooting.</li>
+        <li>This definition is designed to capture the full impact of gun violence, including survivors with severe injuries and long-term trauma.</li>
+        <li>Counting people shot reduces distortion from differences in emergency medical outcomes and highlights injury burden as well as deaths.</li>
+        <li>The source notes that many incidents that don't reach the FBI's definition receive limited media coverage, which can make broader trends easy to miss.</li>
+      </ul>
+      <div class="info-actions">
+        <button id="additional-info-close" type="button">Close</button>
+      </div>
+    </div>
+  </dialog>
 
   <script type="module">
     const currentYearEl = document.getElementById('current-year');
@@ -172,6 +256,9 @@ h1 {
     const doyEl = document.getElementById('DOY');
     const avgEl = document.getElementById('average-shootings-per-day');
     const metaEl = document.getElementById('meta');
+    const infoTriggerEl = document.getElementById('additional-info-trigger');
+    const infoDialogEl = document.getElementById('additional-info-dialog');
+    const infoCloseEl = document.getElementById('additional-info-close');
 
     const today = new Date();
     const year = today.getFullYear();
@@ -216,6 +303,22 @@ h1 {
         metaEl.textContent = 'Could not load data. Please refresh to try again.';
       }
     })();
+
+    infoTriggerEl?.addEventListener('click', () => {
+      if (typeof infoDialogEl?.showModal === 'function') {
+        infoDialogEl.showModal();
+      }
+    });
+
+    const closeInfoDialog = () => infoDialogEl?.close();
+
+    infoDialogEl?.addEventListener('click', (event) => {
+      if (event.target === infoDialogEl) {
+        closeInfoDialog();
+      }
+    });
+
+    infoCloseEl?.addEventListener('click', closeInfoDialog);
   </script>
   <!-- Credit for the shooting data goes to massshootingtracker.site -->
 </body>
