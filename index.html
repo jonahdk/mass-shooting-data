@@ -139,7 +139,19 @@ h1 {
 	cursor: pointer;
 }
 
-.info-trigger:hover { border-color: var(--accent); color: var(--accent); }
+.info-trigger:hover,
+.info-trigger:focus-visible {
+	border-color: var(--accent);
+	color: var(--accent);
+}
+
+.info-trigger:focus-visible,
+.info-actions button:focus-visible {
+	outline: 3px solid -webkit-focus-ring-color;
+	outline: 3px solid var(--accent);
+	outline-offset: 3px;
+	box-shadow: 0 0 0 4px rgba(255, 145, 77, 0.3);
+}
 
 dialog.info-dialog {
 	width: min(720px, calc(100% - 24px));
@@ -221,16 +233,16 @@ dialog.info-dialog {
     </footer>
   </div>
 
-  <dialog id="additional-info-dialog" class="info-dialog">
+  <dialog id="additional-info-dialog" class="info-dialog" aria-labelledby="additional-info-title">
     <div class="info-dialog-content">
-      <h2>How this source defines “mass shooting”</h2>
+      <h2 id="additional-info-title">How this source defines “mass shooting”</h2>
       <ul>
         <li>This dataset tracks incidents where <strong>4 or more people are shot</strong> in one event.</li>
 		<li>This is as opposed to the FBI's definition of mass murder: 3 or more people murdered in one event.</li>
 		<li>For example: in 2012, Travis Steed and others shot 18 people total, miraculously only killing one. As the source notes, under the FBI and mainstream media definition, this would not be considered a mass shooting.</li>
         <li>This definition is designed to capture the full impact of gun violence, including survivors with severe injuries and long-term trauma.</li>
         <li>Counting people shot reduces distortion from differences in emergency medical outcomes and highlights injury burden as well as deaths.</li>
-        <li>The source notes that many incidents that don't reach the FBI's definiton receive limited media coverage, which can make broader trends easy to miss.</li>
+        <li>The source notes that many incidents that don't reach the FBI's definition receive limited media coverage, which can make broader trends easy to miss.</li>
       </ul>
       <div class="info-actions">
         <button id="additional-info-close" type="button">Close</button>
@@ -298,7 +310,15 @@ dialog.info-dialog {
       }
     });
 
-    infoCloseEl?.addEventListener('click', () => infoDialogEl?.close());
+    const closeInfoDialog = () => infoDialogEl?.close();
+
+    infoDialogEl?.addEventListener('click', (event) => {
+      if (event.target === infoDialogEl) {
+        closeInfoDialog();
+      }
+    });
+
+    infoCloseEl?.addEventListener('click', closeInfoDialog);
   </script>
   <!-- Credit for the shooting data goes to massshootingtracker.site -->
 </body>
